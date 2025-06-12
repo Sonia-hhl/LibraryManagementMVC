@@ -1,91 +1,97 @@
-\section*{Library Management MVC}
+# 📚 Library Management System (ASP.NET Core MVC)
 
-A web application built with ASP.NET Core MVC to manage a library system, providing the following features:
+A full-featured web application for managing a library system, developed using ASP.NET Core MVC. This project provides functionalities for managing books, members, and reviews with user authentication and an admin panel.
 
-\begin{itemize}
-    \item \textbf{Book Management:} Add, edit, delete, and search books with filtering options by author, genre, and availability.
-    \item \textbf{Member Management:} User registration, login, and profile viewing.
-    \item \textbf{Reservation System:} Members can reserve books, with automatic stock adjustment and reservation tracking.
-    \item \textbf{Admin Panel:} Separate dashboard for admins to manage users, books, and delete reviews.
-    \item \textbf{Authentication and Sessions:} Secure login system for members and admins using sessions to control access.
-    \item \textbf{Filtering and Sorting:} Implemented search filters and sorting for books and members.
-    \item \textbf{Technologies Used:} ASP.NET Core MVC, Entity Framework Core, SQL Server / SQLite, Bootstrap.
-\end{itemize}
+## ✨ Features
 
-\section*{Project Structure}
+- 🔐 **User Authentication** – Sign up, login, and session management.
+- 📖 **Book Management** – List of books with search, filter, and sort capabilities.
+- 🧑‍🤝‍🧑 **Member Management** – View and manage member details (admin only).
+- 💬 **Review System** – Members can add reviews; admins can delete inappropriate reviews.
+- 📊 **Admin Panel** – A secure section for managing library content and members.
+- 🎯 **Role-based Access Control** – Access restriction based on admin/user roles.
 
-\begin{itemize}
-    \item \textbf{Controllers:} Handle requests for books, members, reservations, and admin panel.
-    \item \textbf{Models:} Data models such as Member, Book, Reservation, Review.
-    \item \textbf{Views:} Razor pages for user interface and interaction.
-    \item \textbf{Data:} Database context and migration classes using EF Core.
-    \item \textbf{wwwroot:} Static files like CSS and JavaScript.
-\end{itemize}
+## 🛠 Technologies Used
 
-\section*{Key Features}
+- **ASP.NET Core MVC**
+- **Entity Framework Core**
+- **SQLite** (local development database)
+- **Bootstrap 5** (UI styling)
+- **C#**
 
-\begin{itemize}
-    \item Member registration and login with validation.
-    \item Admin roles for privileged site management.
-    \item Book reservation with stock control and reservation status display.
-    \item Admin-only review deletion and management.
-    \item Session-based authentication for secure access control.
-\end{itemize}
+## 🚀 Getting Started
 
-\section*{How to Run}
+### Prerequisites
 
-\begin{enumerate}
-    \item \textbf{Clone the repository:}
-    \begin{verbatim}
-    git clone https://github.com/Sonia-hhl/LibraryManagementMVC.git
-    cd LibraryManagementMVC
-    \end{verbatim}
+- [.NET SDK 7.0+](https://dotnet.microsoft.com/)
+- Visual Studio or VS Code with C# and .NET support
 
-    \item \textbf{Configure the connection string in \texttt{appsettings.json}:}
+### Running the Project Locally
 
-    \begin{verbatim}
-    "ConnectionStrings": {
-        "LibraryConnection": "Data Source=library.db"
-    }
-    \end{verbatim}
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Sonia-hhl/LibraryManagementMVC.git
+   cd LibraryManagementMVC
+2. Restore dependencies:
+   ```bash
+   dotnet restore
+3. Run the application:
+   ```bash
+   dotnet run
+4. Open your browser and navigate to:
+   ```bash
+   https://localhost:7021
+You may need to enable session support or migrations depending on your setup.
 
-    Or update it to connect to your SQL Server instance.
 
-    \item \textbf{Apply migrations and update the database:}
+## 🧪 Sample Admin Login
 
-    \begin{verbatim}
-    dotnet ef database update
-    \end{verbatim}
+You can log in as an admin using credentials from the seeded or test database:
 
-    \item \textbf{Run the application:}
+- **Username**: `admin`
+- **Password**: `admin123`
 
-    \begin{verbatim}
-    dotnet run
-    \end{verbatim}
+> Make sure the user in the database has `IsAdmin = true`.
 
-    \item Open your browser and navigate to \texttt{https://localhost:5001} (or your project's assigned port).
-\end{enumerate}
+## 📁 Project Structure
+```vbnet
+LibraryManagementMVC/
+│
+├── Controllers/
+│   ├── BooksController.cs
+│   ├── MembersController.cs
+│   └── ReviewController.cs
+│
+├── Models/
+│   ├── Book.cs
+│   ├── Member.cs
+│   └── Review.cs
+│
+├── Views/
+│   ├── Shared/
+│   ├── Books/
+│   ├── Members/
+│   └── Review/
+│
+├── Data/
+│   └── LibraryContext.cs
+│
+├── wwwroot/
+│   └── (CSS, JS, images)
+│
+└── appsettings.json
+```
 
-\section*{Using the Admin Panel}
+## 🛡 Security Notes
 
-\begin{itemize}
-    \item Log in using an admin username and password stored in the database.
-    \item After login, you can manage books, members, and reviews.
-    \item The delete review button is visible only to admins.
-\end{itemize}
+- Passwords are stored in plain text in this version — only for demo purposes.
+- For production, use hashing (e.g., `BCrypt`) and HTTPS.
 
-\section*{Future Enhancements}
+## 📜 License
 
-\begin{itemize}
-    \item Password recovery feature.
-    \item Improved UI responsiveness.
-    \item Implementing API endpoints for mobile app integration.
-    \item Password hashing and enhanced login security.
-\end{itemize}
+This project is for educational purposes and currently has no license.
 
-\section*{Contact}
+---
 
-\begin{itemize}
-    \item Email: your.email@example.com
-    \item GitHub: \url{https://github.com/Sonia-hhl}
-\end{itemize}
+Feel free to fork, star ⭐, or contribute via issues and pull requests!
+
