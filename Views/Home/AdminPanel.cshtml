@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+    var members = ViewBag.Members as List<LibraryManagement2.Models.Member>;
+    var books = ViewBag.Books as List<LibraryManagement2.Models.Book>;
+}
+
+<h2>Admin Panel</h2>
+
+<!-- Add member and Book -->
+<div class="mb-4">
+    <a class="btn btn-success me-2" asp-controller="Members" asp-action="Create">➕ Add Member</a>
+    <a class="btn btn-primary" asp-controller="Books" asp-action="Create">➕ Add Book</a>
+    <a class="btn btn-primary" asp-controller="Members" asp-action="CreateAdmin">➕ New Admin</a>
+</div>
+
+<hr />
+
+<!-- Search Users -->
+<h3>👥 Members</h3>
+<form method="get" asp-action="AdminPanel">
+    <input type="text" name="memberSearch" value="@ViewBag.MemberSearch" placeholder="Search members..." class="form-control mb-2" />
+    <button type="submit" class="btn btn-outline-secondary mb-3">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in members)
+        {
+            @if (!m.IsAdmin)
+            {
+                <tr>
+                    <td>@m.Name</td>
+                    <td>@m.Email</td>
+                    <td>@m.PhoneNumber</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-controller="Members" asp-action="Edit" asp-route-id="@m.Id" asp-route-returnUrl="@Url.Action("AdminPanel", "Home")">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-controller="Members" asp-action="Delete" asp-route-id="@m.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<!-- Search Books -->
+<h3>📚 Books</h3>
+<form method="get" asp-action="AdminPanel">
+    <input type="text" name="bookSearch" value="@ViewBag.BookSearch" placeholder="Search books..." class="form-control mb-2" />
+    <button type="submit" class="btn btn-outline-secondary mb-3">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in books)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Books" asp-action="ReservationHistory" asp-route-id="@b.Id">
+                        @b.Title
+                    </a>
+                </td>
+                <td>@b.Author</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-controller="Books" asp-action="Edit" asp-route-id="@b.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-controller="Books" asp-action="Delete" asp-route-id="@b.Id">Delete</a>
+                    <a class="btn btn-sm btn-primary" asp-controller="Reviews" asp-action="Index" asp-route-id="@b.Id">Reviews</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>👥 Admins</h3>
+<form method="get" asp-action="AdminPanel">
+    <input type="text" name="memberSearch" value="@ViewBag.MemberSearch" placeholder="Search Admins..." class="form-control mb-2" />
+    <button type="submit" class="btn btn-outline-secondary mb-3">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var m in members)
+        {
+            @if (m.IsAdmin)
+            {
+                <tr>
+                    <td>@m.Name</td>
+                    <td>@m.Email</td>
+                    <td>@m.PhoneNumber</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-controller="Members" asp-action="Edit" asp-route-id="@m.Id" asp-route-returnUrl="@Url.Action("AdminPanel", "Home")">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-controller="Members" asp-action="Delete" asp-route-id="@m.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<form asp-controller="Home" asp-action="Logout" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-danger">Logout</button>
+</form>

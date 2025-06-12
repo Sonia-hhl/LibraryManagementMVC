@@ -1,0 +1,28 @@
+﻿@model List<Loan>
+@{
+    ViewData["Title"] = "Reservation History";
+}
+<h2>Reservation History for "@ViewBag.BookTitle"</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Member</th>
+            <th>Loan Date</th>
+            <th>Returned?</th>
+            <th>Return Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in Model)
+        {
+            <tr>
+                <td>@loan.Loanee?.Name</td>
+                <td>@loan.LoanDate.ToShortDateString()</td>
+                <td>@(loan.IsReturned ? "Yes" : "No")</td>
+                <td>@(loan.IsReturned? loan.ReturnDate?.ToShortDateString() : "-")</td>
+            </tr>
+        }
+        <a asp-controller="Home" asp-action="AdminPanel" >Back </a>
+    </tbody>
+</table>

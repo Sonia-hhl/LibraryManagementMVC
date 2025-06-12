@@ -1,0 +1,121 @@
+﻿@model LibraryManagement2.Models.Member
+
+@{
+    ViewData["Title"] = "Details";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Member</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SignUpDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SignUpDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaxReserveNum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaxReserveNum)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Fine)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Fine)
+        </dd>
+        @if (Model.Fine > 0)
+        {
+            <form asp-action="PayFine" method="post" class="d-inline">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success btn-sm">Pay Fine</button>
+            </form>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" asp-route-returnUrl="@Url.Action("Details", "Members", new { id = Model?.Id })">Edit</a>|
+    @{
+        string returnUrl = ViewBag.ReturnUrl as string ?? "/";
+        string buttonLabel = returnUrl.Contains("AdminPanel") ? "Back to list" : "Log out";
+    }
+
+    <a href="@returnUrl" class="btn btn-secondary">@buttonLabel</a>
+    <h3>Reserved:</h3>
+    @if (ViewBag.CurrentReservations != null && ViewBag.CurrentReservations.Count > 0)
+    {
+        <ul>
+            @foreach (var res in ViewBag.CurrentReservations as List<Loan>)
+            {
+                <li>
+                    @res.LentBook?.Title - LoanDate: @res.LoanDate.ToShortDateString()
+                    <form asp-action="Return" asp-controller="Loans" asp-route-id="@res.Id" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@res.Id" />
+                        <button type="submit" class="btn btn-warning btn-sm">Return</button>
+
+                    </form>
+                    <a asp-controller="Reviews" asp-action="Create" asp-route-bookId="@res.BookId" class="btn btn-sm btn-outline-success">
+                        Add Review
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No Current reserve.</p>
+    }
+
+    <h3>Reserve History:</h3>
+    @if (ViewBag.PastReservations != null && ViewBag.PastReservations.Count > 0)
+    {
+        <ul>
+            @foreach (var res in ViewBag.PastReservations as List<Loan>)
+            {
+                <li>@res.LentBook?.Title (ReturnDate: @res.ReturnDate?.ToShortDateString())</li>
+                <a asp-controller="Reviews" asp-action="Create" asp-route-bookId="@res.BookId" class="btn btn-sm btn-outline-success">
+                    Add Review
+                </a>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No history.</p>
+    }
+
+
+
+</div>

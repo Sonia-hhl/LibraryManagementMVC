@@ -1,0 +1,54 @@
+﻿@model List<LibraryManagement2.Models.Review>
+
+@{
+    ViewData["Title"] = "Reviews for " + ViewData["BookTitle"];
+}
+
+<h2>Reviews for @ViewData["BookTitle"]</h2>
+
+<p>
+    Sort by:
+    <a asp-action="BookReviews" asp-route-bookId="@ViewData["BookId"]" asp-route-sortOrder="@ViewData["RatingSortParm"]">Rating</a> |
+    <a asp-action="BookReviews" asp-route-bookId="@ViewData["BookId"]" asp-route-sortOrder="@ViewData["DateSortParm"]">Date</a>
+</p>
+@{
+    bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rating</th>
+            <th>Comment</th>
+            <th>Date</th>
+            <th>Member</th>
+            @if (isAdmin)
+            {
+                <th>Delete</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var review in Model)
+        {
+            <tr>
+                <td>@review.Rating</td>
+                <td>@review.Comment</td>
+                <td>@review.Date.ToShortDateString()</td>
+                <td>@review.Member?.Name</td>
+                @if (isAdmin)
+                {
+                    <td>
+                        <form asp-controller="Review" asp-action="Delete" asp-route-id="@review.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<a asp-controller="Books" asp-action="Details" asp-route-id="@ViewData["BookId"]">Back to Book Details</a>

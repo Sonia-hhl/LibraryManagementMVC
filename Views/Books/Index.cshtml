@@ -1,0 +1,152 @@
+﻿@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@model IEnumerable<LibraryManagement2.Models.Book>
+
+<form method="get" asp-action="Index" class="form-inline mb-3">
+
+    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control mr-2" placeholder="Search Title or Author" />
+
+    <input type="text" name="isbnSearch" value="@ViewData["CurrentISBN"]" class="form-control mr-2" placeholder="Search ISBN" />
+
+    <select name="genreFilter" class="form-control mr-2">
+        <option value="">All Genres</option>
+        @if (ViewBag.Genres != null){
+            foreach (var genre in ViewBag.Genres as List<string>)
+            {
+                if (genre == (string)ViewData["CurrentGenre"])
+                {
+                    <option value="@genre" selected>@genre</option>
+                }
+                else
+                {
+                    <option value="@genre">@genre</option>
+                }
+            }
+        }
+    </select>
+
+    <label class="mr-2">
+        <input type="checkbox" name="onlyAvailable" value="true" @( (bool)ViewData["OnlyAvailable"] ? "checked" : "") />
+        Available Only
+    </label>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-isbnSearch="@ViewData["CurrentISBN"]" asp-route-genreFilter="@ViewData["CurrentGenre"]" asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                    Title
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-isbnSearch="@ViewData["CurrentISBN"]" asp-route-genreFilter="@ViewData["CurrentGenre"]" asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                    Author
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" asp-route-isbnSearch="@ViewData["CurrentISBN"]" asp-route-genreFilter="@ViewData["CurrentGenre"]" asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                    Published Date
+                </a>
+            </th>
+            <th>ISBN</th>
+            <th>Genre</th>
+            <th>Available Copies</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Author</td>
+                    <td>@item.PublishedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.ISBN</td>
+                    <td>@item.Genre</td>
+                    <td>@item.AvailableCopies</td>
+                    <td>
+                        <form asp-controller="Books" asp-action="Reserve" method="post" style="display:inline">
+                            <input type="hidden" name="bookId" value="@item.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Reserve</button>
+                        </form>
+                        <a class="btn btn-primary" asp-controller="Reviews" asp-action="BookReviews" asp-route-bookId="@item.Id">
+                            View Reviews
+                        </a>
+                        @{
+                            var userId = Context.Session.GetString("UserId");
+                            bool isAdmin = false;
+
+                    }
+
+                    </td>
+                </tr>
+                
+
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No records found.</td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<nav>
+    <ul class="pagination">
+        @{
+            int currentPage = (int)ViewData["PageNumber"];
+            int totalPages = (int)ViewData["TotalPages"];
+        }
+
+        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage - 1)"
+                asp-route-sortOrder="@ViewData["CurrentSort"]"
+                asp-route-searchString="@ViewData["CurrentFilter"]?.ToString()"
+                asp-route-isbnSearch="@ViewData["CurrentISBN"]?.ToString()"
+                asp-route-genreFilter="@ViewData["CurrentGenre"]?.ToString()"
+                asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                Previous
+            </a>
+        </li>
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(i == currentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
+                    asp-route-sortOrder="@ViewData["CurrentSort"]"
+                    asp-route-searchString="@ViewData["CurrentFilter"]?.ToString()"
+                    asp-route-isbnSearch="@ViewData["CurrentISBN"]?.ToString()"
+                    asp-route-genreFilter="@ViewData["CurrentGenre"]?.ToString()"
+                    asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                    @i
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage + 1)"
+                asp-route-sortOrder="@ViewData["CurrentSort"]"
+                asp-route-searchString="@ViewData["CurrentFilter"]?.ToString()"
+                asp-route-isbnSearch="@ViewData["CurrentISBN"]?.ToString()"
+                asp-route-genreFilter="@ViewData["CurrentGenre"]?.ToString()"
+                asp-route-onlyAvailable="@(ViewData["OnlyAvailable"])">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
+
